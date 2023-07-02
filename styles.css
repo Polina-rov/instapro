@@ -196,3 +196,16 @@
   width: 100%;
   text-align: center;
 }
+.users-posts {
+  display: flex;
+  flex-direction: row;
+  column-gap: 20px;
+  padding: 0;
+  margin: 0;
+  flex-wrap: wrap
+}
+
+.users_post {
+  width: 500px;
+}
+

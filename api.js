@@ -67,26 +67,26 @@ export function uploadImage({ file }) {
   });
 }
 
-// export function uploadPost({ token, description, imageUrl }) {
-//   // Запись нового поста
-//   return fetch(postsHost, {
-//     method: "POST",
-//     headers: {
-//       Authorization: token,
-//     },
-//     body: JSON.stringify({
-//       description,
-//       imageUrl
-//     }),
-//   }).then((response) => {
-//     if (response.status === 201) {
-//       return response.json();
-//     } else if (response.status === 401) {
-//       console.log("Ошибка авторизации");
-//       throw new Error("Нет авторизации");
-//     } else {
-//       console.log("Прочие ошибки");
-//       throw new Error("Прочие ошибки записи поста");
-//     }
-//   });
-// }
+export function uploadPost({ token, description, imageUrl }) {
+  // Добавление нового поста
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl
+    }),
+  }).then((response) => {
+    if (response.status === 201) {
+      return response.json();
+    } else if (response.status === 401) {
+      console.log("Ошибка авторизации");
+      throw new Error("Нет авторизации");
+    } else {
+      console.log("Прочие ошибки");
+      throw new Error("Прочие ошибки записи поста");
+    }
+  });
+}
