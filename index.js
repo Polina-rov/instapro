@@ -1,4 +1,4 @@
-import { getPosts } from './api.js';
+import { getPosts, changeLike } from './api.js';
 import { renderAddPostPageComponent } from './components/add-post-page-component.js';
 import { renderAuthPageComponent } from './components/auth-page-component.js';
 import {
@@ -7,6 +7,7 @@ import {
   LOADING_PAGE,
   POSTS_PAGE,
   USER_POSTS_PAGE,
+  CHANGE_LIKE_PAGE,
 } from './routes.js';
 import { renderPostsPageComponent } from './components/posts-page-component.js';
 import { renderLoadingPageComponent } from './components/loading-page-component.js';
@@ -47,6 +48,7 @@ export const goToPage = (newPage, data) => {
       ADD_POSTS_PAGE,
       USER_POSTS_PAGE,
       LOADING_PAGE,
+      CHANGE_LIKE_PAGE,
     ].includes(newPage)
   ) {
     if (newPage === ADD_POSTS_PAGE) {
@@ -70,6 +72,7 @@ export const goToPage = (newPage, data) => {
           goToPage(POSTS_PAGE);
         });
     }
+
     if (newPage === USER_POSTS_PAGE) {
       page = LOADING_PAGE;
       renderApp();
@@ -82,6 +85,28 @@ export const goToPage = (newPage, data) => {
         })
         .catch((error) => {
           console.error(error);
+          goToPage(POSTS_PAGE);
+        });
+    }
+
+    if (newPage === CHANGE_LIKE_PAGE) {
+      const currentPostIndex = posts.findIndex(
+        (post) => post.id === data.postId
+      );
+
+      return changeLike({
+        token: getToken(),
+        id: data.postId,
+        isLike: posts[currentPostIndex].isLiked,
+      })
+        .then((newPosts) => {
+          page = POSTS_PAGE;
+          posts[currentPostIndex].likes = newPosts.likes;
+          posts[currentPostIndex].isLiked = !posts[currentPostIndex].isLiked;
+          renderApp();
+        })
+        .catch((error) => {
+          console.log(error);
           goToPage(POSTS_PAGE);
         });
     }
@@ -132,11 +157,11 @@ const renderApp = () => {
       appEl,
     });
   }
-   
+
   if (page === USER_POSTS_PAGE) {
-   return renderPostsPageComponent({
-    appEl,
-  });
+    return renderPostsPageComponent({
+      appEl,
+    });
   }
 };
 

@@ -1,6 +1,6 @@
-import { USER_POSTS_PAGE } from '../routes.js';
+import { USER_POSTS_PAGE, CHANGE_LIKE_PAGE } from '../routes.js';
 import { renderHeaderComponent } from './header-component.js';
-import { posts, goToPage } from '../index.js';
+import { posts, goToPage, getToken, getId } from '../index.js';
 import { formatDistanceToNow } from 'date-fns';
 
 export function renderPostsPageComponent({ appEl }) {
@@ -64,6 +64,7 @@ export function renderPostsPageComponent({ appEl }) {
   </div>`;
 
   appEl.innerHTML = appHtml;
+
   renderHeaderComponent({
     element: document.querySelector('.header-container'),
   });
@@ -72,6 +73,17 @@ export function renderPostsPageComponent({ appEl }) {
     userEl.addEventListener('click', () => {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
+      });
+    });
+  }
+  for (let likeEl of document.querySelectorAll('.like-button')) {
+    likeEl.addEventListener('click', () => {
+      if (!getToken()) {
+        alert('Лайкать посты могут только авторизованные пользователи!');
+        return;
+      }
+      goToPage(CHANGE_LIKE_PAGE, {
+        postId: likeEl.dataset.postId,
       });
     });
   }
